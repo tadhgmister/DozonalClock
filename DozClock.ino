@@ -314,7 +314,9 @@ void loop()
 //  lcd.setCursor(0,1);
 //  // print "Tadhg" at (0, 1)
 //  lcd.print("Tadhg");
-  unsigned long n = 0x88000ul;// 0xD5000ul;
+  // ㍙=1, ㍚=2, ㍛=4, ㍜=5, ㍝=6, ㍞=8, ㍟=9, ㍠=A, ㍡=C, ㍢=D, ㍣=E
+  //                0x12345ul
+  unsigned long n = 0xD9000ul;
   
   write_digit(0, n>>16);
   write_digit(1, n>>12);
@@ -341,13 +343,13 @@ void loop()
     n = new_n;
     timekeep += 346;
 
-    /* Implementing 11/32 as close approximation to measured 1806033/5262500 */
+    /* Implementing 189/349 as an approximation for 346 + 16462310/30398671 */
     cycle += 1;
-    if(cycle >= 32){
+    if(cycle >= 349){
       cycle = 0;
     }
-    // ever even number (16/32) except for 5 which are picked to be roughly equally spaced (11/32)
-    if ((cycle & 1)==0 && cycle != 4 && cycle != 10 && cycle !=16 && cycle != 22 && cycle != 28){
+    //v = [x for x in range(349) if x&1 == 0 or x&0x1F==0x01 or x&0x7F == 0x11]; print(len(v))  #189
+    if ((cycle & 1)==0 || (cycle&0x1F)==0x01 or (cycle&0x7F)==0x11){
       timekeep += 1;
     }
     unsigned long t_2 = millis();

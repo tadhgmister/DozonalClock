@@ -61,8 +61,8 @@ COMMON_FLAGS := \
     -fdata-sections \
     -flto
 
-CXXFLAGS    := $(COMMON_FLAGS) -std=gnu++14 -fno-exceptions -fno-threadsafe-statics
-CFLAGS      := $(COMMON_FLAGS) -std=gnu14
+CXXFLAGS    := $(COMMON_FLAGS) -std=gnu++11 -fno-exceptions -fno-threadsafe-statics
+CFLAGS      := $(COMMON_FLAGS) -std=gnu11
 
 # ── Build artefacts ──────────────────────────────────────────────────────────
 BUILD_DIR   := build
