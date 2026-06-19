@@ -1,5 +1,5 @@
 /*
-  By Andryko _______ and Tadhg McDonald-Jensen
+  By Andriyko Goyaniuk and Tadhg McDonald-Jensen
   program to display time in dozonal on LCD screen.
   
   see https://tadhg.mcdonald-jensen.ca/clockAndCheatsheet.html for more details
