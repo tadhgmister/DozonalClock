@@ -115,7 +115,7 @@
 
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 16, 2); // Format -> (Address,Width,Height )
-#include "SetMode.h"
+#include "SetMode.cpp"
 
 typedef byte GLYPH[8];
 
