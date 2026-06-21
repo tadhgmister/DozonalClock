@@ -12,27 +12,25 @@ unsigned long trySetMode(unsigned long n){
   unsigned short nextRange;
   while(1){
     unsigned short a0AnalogValue = analogRead(A0) + 1; //read A0 analog pin, offset by 1 to make math easier
-    switch (a0AnalogValue){
-      case (a0AnalogValue > halfAnalogInputRange):
+      if (a0AnalogValue > halfAnalogInputRange){
        toShowDigit = true;
        nextRange = 6;
-       break;
-      case (a0AnalogValue > 4*digitSelectRange):
+      }
+      else if (a0AnalogValue > 4*digitSelectRange){
         nextRange = 5;
-        break;
-      case (a0AnalogValue > 3*digitSelectRange):
+      }
+      else if (a0AnalogValue > 3*digitSelectRange){
         nextRange = 4;
-        break;
-      case (a0AnalogValue > 2*digitSelectRange):
+      }
+      else if (a0AnalogValue > 2*digitSelectRange){
         nextRange = 3;
-        break;
-      case (a0AnalogValue > 1*digitSelectRange):
+      }
+      else if (a0AnalogValue > 1*digitSelectRange){
         nextRange = 2;
-        break;
-      case (a0AnalogValue > 0):
+      }
+      else if (a0AnalogValue > 0){
         nextRange = 1;
-        break;
-    }
+      }
      if (nextRange != currentRange){// range has changed
       if (!digitShowing){// if a digit is off
         //TODO:show the digit
