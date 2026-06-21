@@ -115,7 +115,7 @@
 
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27, 16, 2); // Format -> (Address,Width,Height )
-
+#include "SetMode.h"
 
 typedef byte GLYPH[8];
 
@@ -332,7 +332,7 @@ void loop()
      Each tick of the clock should be 347.222222 milliseconds from the last tick
      (25/72 s/tick) and the delay is set to account for the time it takes to calculate the next number and update the display */
   unsigned long timekeep = millis();
-  while(1){
+  while(1){  
     unsigned long new_n = increment_doz(n);
     update_digit(0, new_n>>16, n>>16);
     update_digit(1, new_n>>12, n>>12);
@@ -341,6 +341,7 @@ void loop()
     update_digit(4, new_n>>0,  n>>0);
 
     n = new_n;
+    n = trySetMode(n);
     timekeep += 346;
 
     /* Implementing 189/349 as an approximation for 346 + 16462310/30398671 */
