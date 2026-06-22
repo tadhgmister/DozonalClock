@@ -9,7 +9,7 @@ char read_selector_dial(){
   if(selector_val >= 5 || selector_val < 0){
     return -1;
   } else {
-    return selector_val;
+    return (char)selector_val;
   }
 }
 
@@ -74,9 +74,9 @@ void write_digit(byte idx, char n){
 }
 /** writes the 5 dozonal digits of the number to the right side lcd display. */
 void write_number(unsigned long n){
-  write_digit(END_OF_DISPLAY-10,n>>16);
-  write_digit(END_OF_DISPLAY-8, n>>12);
-  write_digit(END_OF_DISPLAY-6, n>> 8);
-  write_digit(END_OF_DISPLAY-4, n>> 4);
-  write_digit(END_OF_DISPLAY-2, n>> 0);
+  write_digit(END_OF_DISPLAY-10,(byte)(n>>16));
+  write_digit(END_OF_DISPLAY-8, (byte)(n>>12));
+  write_digit(END_OF_DISPLAY-6, (byte)(n>> 8));
+  write_digit(END_OF_DISPLAY-4, (byte)(n>> 4));
+  write_digit(END_OF_DISPLAY-2, (byte)(n>> 0));
 }

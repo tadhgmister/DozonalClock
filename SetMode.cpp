@@ -12,7 +12,7 @@ bool button_to_trigger_set_is_pressed(){
 
 // maps values from 0 to 11 to their proper bit representation for dozonal.
 // used by read_digit_set_dial to convert to proper bit representation
-unsigned short value_to_bits_map[12] = {
+byte value_to_bits_map[12] = {
    0,  1,  2, // 0b00xx
    4,  5,  6, // 0b01xx
    8,  9, 0xA,// 0b10xx
@@ -42,7 +42,7 @@ byte read_digit_set_dial(){
 
 /** sets the cursor in the appropriate place to indicate a digit is selected for overriding */
 void set_cursor_for_selection_blinking(char selector_digit){
-  lcd.setCursor(END_OF_DISPLAY - 1 - 2*selector_digit, 0);
+  lcd.setCursor(END_OF_DISPLAY - 1 -2*selector_digit, 0);
 }
 
 /** 
@@ -112,54 +112,3 @@ void do_set_mode(char selector_dig, unsigned long *n){
   lcd.setCursor(0,1);
   lcd.print("  ");
 }
-
-
-
-	      
-// unsigned long trySetMode(unsigned long n){
-//   unsigned short halfAnalogInputRange = analogInputRange/2;
-//   unsigned short digitSelectRange = halfAnalogInputRange/5;
-//   unsigned long blinkPeriod = 1000; //period of blinks in milliseconds
-//   bool digitShowing = true; //whether a digit is currently shown during blinking
-//   bool toShowDigit = true;
-//   unsigned short currentRange = 6;
-//   unsigned short nextRange;
-//   while(1){
-//     unsigned short a0AnalogValue = analogRead(A0) + 1; //read A0 analog pin, offset by 1 to make math easier
-
-//     if (a0AnalogValue > halfAnalogInputRange){
-//       toShowDigit = true;
-//       nextRange = 6;
-//     }
-//     else if (a0AnalogValue > 4*digitSelectRange){
-//       nextRange = 5;
-//     }
-//     else if (a0AnalogValue > 3*digitSelectRange){
-//       nextRange = 4;
-//     }
-//     else if (a0AnalogValue > 2*digitSelectRange){
-//       nextRange = 3;
-//     }
-//     else if (a0AnalogValue > 1*digitSelectRange){
-//       nextRange = 2;
-//     }
-//     else if (a0AnalogValue > 0){
-//       nextRange = 1;
-//     }
-//      if (nextRange != currentRange){// range has changed
-//       if (!digitShowing){// if a digit is off
-//         //TODO:show the digit
-//         digitShowing = true;
-//        }
-//       }
-//       if(nextRange == 6){
-//         return n;
-//       }
-//      toShowDigit = (millis()%blinkPeriod < blinkPeriod/2) ? true:false;
-//      if (toShowDigit != digitShowing){
-//        //TODO: turn the digit corrsponding to the respective range on or off appropriately
-//        digitShowing = toShowDigit;
-//      }
-//   }
-// }
-

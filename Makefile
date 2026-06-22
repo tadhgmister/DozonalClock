@@ -57,6 +57,7 @@ COMMON_FLAGS := \
     -Wall \
     -Wextra \
     -Wpedantic \
+    -Wconversion \
     -ffunction-sections \
     -fdata-sections \
     -flto
