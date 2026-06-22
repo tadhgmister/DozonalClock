@@ -27,7 +27,7 @@ LCD_DIR     ?= ./LiquidCrystal_I2C-1.1.2
 # Any extra libraries your sketch uses, e.g.:
 #   EXTRA_INCLUDES := -I$(CORE_DIR)/libraries/Wire/src \
 #                     -I$(HOME)/.arduino15/libraries/SomeLib/src
-EXTRA_INCLUDES := -I$(CORE_DIR)/libraries/Wire/src -I$(LCD_DIR)
+EXTRA_INCLUDES := -I$(CORE_DIR)/libraries/Wire/src -I$(LCD_DIR) -I.
 
 # ── Board settings (Arduino Nano, ATmega328P, 16 MHz) ───────────────────────
 MCU         := atmega328p
@@ -100,6 +100,8 @@ $(BUILD_DIR)/libs/LiquidCrystal_I2C.o: $(LCD_DIR)/LiquidCrystal_I2C.cpp | $(BUIL
 	@mkdir -p $(BUILD_DIR)/libs
 	$(CXX) $(CXXFLAGS) -I$(dir $<) -c $< -o $@
 
+$(BUILD_DIR)/%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # ── Default target: compile-check only ───────────────────────────────────────
 .PHONY: all check hex clean flash
