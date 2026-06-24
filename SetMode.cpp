@@ -40,10 +40,10 @@ byte read_digit_set_dial(){
   return value_to_bits_map[dig];
 }
 
-/** sets the cursor in the appropriate place to indicate a digit is selected for overriding */
-void set_cursor_for_selection_blinking(char selector_digit){
-  lcd.setCursor(END_OF_DISPLAY - 1 -2*selector_digit, 0);
-}
+// /** sets the cursor in the appropriate place to indicate a digit is selected for overriding */
+// void set_cursor_for_selection_blinking(char selector_digit){
+//   lcd.setCursor(END_OF_DISPLAY - 1 -2*selector_digit, 0);
+// }
 
 /** 
   overrides one dozonal digit as performed by setting mode
@@ -68,47 +68,66 @@ unsigned long override_digit(unsigned long n, int digit_index, byte value){
 }
 
 
-void do_set_mode(char selector_dig, unsigned long *n){
-  // we will want to blink the cursor at the selected digit so enable blinking
-  lcd.blink();
-  // there are a bunch of cases where we might redraw the screen, any will raise this flag and then at the end of the loop we return the cursor to the actual selected position.
-  bool need_to_fix_cursor = true;
+void do_set_mode(char selectRange, unsigned long *n){
+
+  /// NOTE:
+  //       'range' indicates which glyph would be overriden - the position.
+  // while 'value' indicates the actual value that would be written there.
+  //
+  // comments use the word 'digit' loosely, usually regarding the
+  // digit at the selected position but check relevant variable names to be sure.
   
-  // write the digit selected by the other dial on the left side of the screen
+  const unsigned long blinkPeriod = 1000; //period of blinks in milliseconds
+  
+  // whether a digit at the selected range is currently shown during blinking
+  // assume initially the digit is showing as that would be the case duing run mode
+  bool digitShowing = true;
+  
+  // write the digit value selected by the other dial on the left side of the screen
   byte value_to_override = read_digit_set_dial();
-  write_digit(0, value_to_override);
+  write_digit_direct(VAL_SELECTOR_DIGIT, value_to_override);
   
-  for(char new_selection = selector_dig; new_selection != -1; new_selection = read_selector_dial()){
-    if(new_selection != selector_dig){
-      selector_dig = new_selection;
-      need_to_fix_cursor = true;
+  for(char new_selRange = selectRange; new_selRange >= 0; new_selRange = read_selector_dial()){
+    if(new_selRange != selectRange){ // range has changed
+      if(!digitShowing){ // if a digit is off
+	// show the no longer selected digit
+        update_digit(selectRange, *n);
+	digitShowing = true;
+      }
+      selectRange = new_selRange;
     }
+    // get the most recent value of the value set dial and update the display to match if needed.
     byte new_val = read_digit_set_dial();
     if(new_val != value_to_override){
       value_to_override = new_val;
-      write_digit(0, value_to_override);
-      need_to_fix_cursor = true;
+      write_digit_direct(VAL_SELECTOR_DIGIT, value_to_override);
+      //need_to_fix_cursor = true;
     }
     
     if(button_to_trigger_set_is_pressed()){
-      unsigned long new_n = override_digit(*n, selector_dig, value_to_override);
+      unsigned long new_n = override_digit(*n, selectRange, value_to_override);
       if(new_n != *n){
 	*n = new_n;
-	write_number(new_n);
-	need_to_fix_cursor = true;
+	update_digit(selectRange, new_n);
+	digitShowing = true;
+	//need_to_fix_cursor = true;
       }
     }
-    if(need_to_fix_cursor){
-      set_cursor_for_selection_blinking(selector_dig);
-      need_to_fix_cursor = false;
+    bool toShowDigit = (millis()%blinkPeriod < blinkPeriod/2); // ? true:false ;
+    if(toShowDigit != digitShowing){
+      if(toShowDigit){
+        update_digit(selectRange, *n);
+      } else {
+	erase_digit(selectRange);
+      }
+      digitShowing = toShowDigit;
     }
   }
-  // selection has gone back to -1 for running mode,
-  // disable blinking as it will not matter for running mode.
-  lcd.noBlink();
+  // at this point the selector dial has been moved to running mode (for loop exited)
+  
+  if(!digitShowing){// restore the selected digit if needed
+    update_digit(selectRange, *n);
+  }
   // also clear the left side of the screen of the digit we drew there
-  lcd.setCursor(0,0);
-  lcd.print("  ");
-  lcd.setCursor(0,1);
-  lcd.print("  ");
+  erase_digit(VAL_SELECTOR_DIGIT);
 }
