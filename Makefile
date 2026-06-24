@@ -125,7 +125,7 @@ $(SKETCH_CPP): $(SKETCH).ino | $(BUILD_DIR)
 	@cat $(SKETCH).ino          >> $@
 
 # Step 2: compile to an object file (no link)
-$(SKETCH_OBJ): $(SKETCH_CPP)
+$(SKETCH_OBJ): $(SKETCH_CPP) RunMode.cpp SetMode.cpp commonFuncs.cpp
 	@echo "→  Compiling $(SKETCH_CPP)"
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
