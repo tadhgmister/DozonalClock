@@ -1,0 +1,6 @@
+[submodule "DateTimeFunctions"]
+	path = DateTimeFunctions
+	url = https://github.com/XbergCode/DateTimeFunctions.git
+[submodule "LiquidCrystal_I2C"]
+	path = LiquidCrystal_I2C
+	url = https://github.com/johnrickman/LiquidCrystal_I2C.git

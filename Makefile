@@ -21,13 +21,13 @@ SKETCH      := DozClock
 # Run: ls ~/.arduino15/packages/arduino/hardware/avr/
 CORE_DIR    := $(HOME)/.arduino15/packages/arduino/hardware/avr/1.8.8
 
-LCD_DIR     ?= ./LiquidCrystal_I2C-1.1.2
-
+LCD_DIR     ?= ./LiquidCrystal_I2C
+DATETIME_DIR ?= ./DateTimeFunctions/src
 
 # Any extra libraries your sketch uses, e.g.:
 #   EXTRA_INCLUDES := -I$(CORE_DIR)/libraries/Wire/src \
 #                     -I$(HOME)/.arduino15/libraries/SomeLib/src
-EXTRA_INCLUDES := -I$(CORE_DIR)/libraries/Wire/src -I$(LCD_DIR) -I.
+EXTRA_INCLUDES := -I$(CORE_DIR)/libraries/Wire/src -I$(LCD_DIR) -I. -I$(DATETIME_DIR)
 
 # ── Board settings (Arduino Nano, ATmega328P, 16 MHz) ───────────────────────
 MCU         := atmega328p
@@ -99,6 +99,9 @@ $(BUILD_DIR)/libs/%.o: $(CORE_DIR)/%.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -I$(dir $<) -c $< -o $@
 # Compile rule for specifically liquicd crypstal one
 $(BUILD_DIR)/libs/LiquidCrystal_I2C.o: $(LCD_DIR)/LiquidCrystal_I2C.cpp | $(BUILD_DIR)
+	@mkdir -p $(BUILD_DIR)/libs
+	$(CXX) $(CXXFLAGS) -I$(dir $<) -c $< -o $@
+$(BUILD_DIR)/libs/DateTimeFunctions.o: $(DATETIME_DIR)/DateTimeFunctions.cpp | $(BUILD_DIR)
 	@mkdir -p $(BUILD_DIR)/libs
 	$(CXX) $(CXXFLAGS) -I$(dir $<) -c $< -o $@
 
