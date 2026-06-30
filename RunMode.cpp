@@ -21,29 +21,14 @@ unsigned long increment_doz(unsigned long x){
   }
   return x;
 }
-/**
- * returns the number of milliseconds until the next clock update.
- * with a perfect internal clock each tick is 25/72 seconds which is (347 + 2/9) milliseconds
- * as such calling this function 9 times it will return 348 twice and 347 the other 7 times.
- */
-unsigned int time_to_next_tick_assuming_perfect_oscilator(){
-  static byte cycle = 0;
-  cycle += 1;
-  if (cycle >= 9){
-    cycle = 0;
-  }
-  if(cycle == 3 || cycle == 7){
-    return 348;
-  } else {
-    return 347;
-  }
-}
+
+#ifdef USE_TIMING_FOR_INACCURATE_RESONATOR
 /**
  * returns the number of milliseconds until the next clock update.
  * See timing_tests.md for some details about how this algorithm works,
  * it is largely based on emperically measured timings from the specific board I was working with
  */
-unsigned int time_to_next_tick_emperically_measured(){
+unsigned int time_to_next_tick(){
   static unsigned int cycle = 0;
 
   /* Implementing 189/349 as an approximation for 346 + 16462310/30398671 */
@@ -58,7 +43,25 @@ unsigned int time_to_next_tick_emperically_measured(){
     return 346;
   }
 }
-
+#else
+/**
+ * returns the number of milliseconds until the next clock update.
+ * with a perfect internal clock each tick is 25/72 seconds which is (347 + 2/9) milliseconds
+ * as such calling this function 9 times it will return 348 twice and 347 the other 7 times.
+ */
+unsigned int time_to_next_tick(){
+  static byte cycle = 0;
+  cycle += 1;
+  if (cycle >= 9){
+    cycle = 0;
+  }
+  if(cycle == 3 || cycle == 7){
+    return 348;
+  } else {
+    return 347;
+  }
+}
+#endif
 
 
 /** performs running mode ticking up the clock
@@ -74,7 +77,7 @@ char do_running(unsigned long *n_global){
 
     n = new_n;
     
-    timekeep += time_to_next_tick_emperically_measured();
+    timekeep += time_to_next_tick();
     long time_to_wait = timekeep - millis();
     if(time_to_wait < 0){
       lcd.setCursor(0,0);

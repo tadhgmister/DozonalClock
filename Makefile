@@ -50,6 +50,7 @@ COMMON_FLAGS := \
     -DARDUINO=$(ARDUINO_VER) \
     -DARDUINO_AVR_NANO \
     -DARDUINO_ARCH_AVR \
+    -DUSE_TIMING_FOR_INACCURATE_RESONATOR \
     -I$(CORE_DIR)/cores/arduino \
     -I$(CORE_DIR)/variants/$(VARIANT) \
     $(EXTRA_INCLUDES) \
