@@ -129,8 +129,8 @@ $(SKETCH_CPP): $(SKETCH).ino | $(BUILD_DIR)
 	@cat $(SKETCH).ino          >> $@
 
 # Step 2: compile to an object file (no link)
-$(SKETCH_OBJ): $(SKETCH_CPP) RunMode.cpp SetMode.cpp commonFuncs.cpp
-	@echo "→  Compiling $(SKETCH_CPP)"
+$(SKETCH_OBJ): $(SKETCH_CPP) RunMode.cpp SetMode.cpp commonFuncs.cpp dateHandling.cpp
+	@echo "→  Compiling $(SKETCH_CPP)" 
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # ── hex target: full build ────────────────────────────────────────────────────
@@ -150,7 +150,7 @@ $(BUILD_DIR)/core/%.o: $(CORE_DIR)/cores/arduino/%.cpp | $(BUILD_DIR)
 
 
 # Link everything into an ELF
-$(ELF): $(SKETCH_OBJ) $(CORE_OBJS) $(LIB_OBJS) $(BUILD_DIR)/libs/LiquidCrystal_I2C.o
+$(ELF): $(SKETCH_OBJ) $(CORE_OBJS) $(LIB_OBJS) $(BUILD_DIR)/libs/LiquidCrystal_I2C.o $(BUILD_DIR)/libs/DateTimeFunctions.o
 	@echo "→  Linking"
 	$(CC) -mmcu=$(MCU) -Os -flto -fuse-linker-plugin \
 	    -Wl,--gc-sections \

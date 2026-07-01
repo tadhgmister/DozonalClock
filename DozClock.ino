@@ -14,6 +14,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2); // Format -> (Address,Width,Height )
 
 
 #include "commonFuncs.cpp"
+#include "dateHandling.cpp"
 #include "RunMode.cpp"
 #include "SetMode.cpp"
 
@@ -106,6 +107,8 @@ GLYPH SIX_ON = {
 //                0x12345ul
 unsigned long n = 0x00000ul;
 
+Date d = Date(2026, 6, 30);
+
 void setup()
 {
   // initialize the lcd
@@ -126,6 +129,7 @@ void setup()
   
   // Clear the display buffer then display the initial number to render.
   lcd.clear();
+  d.write_date(lcd);
   write_number(n);
 }
 
@@ -136,7 +140,7 @@ void setup()
     operation to run as needed. */
 void loop()
 {
-  byte selected_dig = do_running(&n);
+  byte selected_dig = do_running(&n, d);
 
   do_set_mode(selected_dig, &n);
 }

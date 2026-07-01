@@ -3,12 +3,13 @@
 #include <DateTimeFunctions.h>
 #include <LiquidCrystal_I2C.h>
 DateTimeFunctions dTF;
-
+static constexpr char weekdays[7] = {'U','M','T','W','R','F','S'};
+  
 
 class Date {
 public:
   /** gets the day corresponding to Unix epoch - 1970 Jan 1st */
-  Date epoch(){
+  static Date epoch(){
     return Date(1970, 1, 1);
   }
   /** creates a new date.
@@ -66,7 +67,6 @@ public:
   }
   
 private:
-  const char weekdays[7] = {'U','M','T','W','R','F','S'};
   /** year in gregorian calendar */
   uint16_t year;
   /** month where 1 = January, 2 = Febuary, ... 12 = December */
@@ -83,12 +83,16 @@ private:
       // these all fallthrough so we simply pad the year by however many spaces until we have 5 total characters written
     case 1:
       lcd.write(' ');
+      __attribute__ ((fallthrough));
     case 2:
       lcd.write(' ');
+      __attribute__ ((fallthrough));
     case 3:
       lcd.write(' ');
+      __attribute__ ((fallthrough));
     case 4:
       lcd.write(' ');
+      __attribute__ ((fallthrough));
     case 5:
       // if the year has 5 digits the weekday letter will be right up against the year
       break; 

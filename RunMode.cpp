@@ -66,13 +66,19 @@ unsigned int time_to_next_tick(){
 
 /** performs running mode ticking up the clock
   returns the selector dial value when it indicates we have left running mode */
-char do_running(unsigned long *n_global){
+char do_running(unsigned long *n_global, Date d){
+  
   unsigned long n = *n_global;
   // re-measure the current time after we leave set-mode and tick the clock starting from this
   unsigned long timekeep = millis();
   char selector_mode; // as long as selector dial reads -1 we stay in running mode
   while((selector_mode = read_selector_dial()) == -1){
     unsigned long new_n = increment_doz(n);
+    if(new_n > 0x100000ul){
+      new_n -= 0x100000ul;
+      d.increment();
+      d.write_date(lcd);
+    }
     write_number(new_n);
 
     n = new_n;
